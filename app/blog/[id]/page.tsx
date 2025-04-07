@@ -1,8 +1,10 @@
-import { Badge, Folder, Tag } from 'lucide-react';
+import { Folder, Tag } from 'lucide-react';
 import Image from 'next/image';
 import { client, getBlogPost,getBlogPostsForCardsById } from '../../../lib/microcms';
 import { BlogCard } from '@/app/components/blog-card';
-import NotFound from '../../not-found';
+
+import React from 'react';
+
 
 // 記事詳細ページの生成
 export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {

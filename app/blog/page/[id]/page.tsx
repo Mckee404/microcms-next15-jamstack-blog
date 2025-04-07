@@ -4,6 +4,8 @@ import { Pagination } from '../../../components/Pagination';
 import { PER_PAGE } from '@/app/config';
 import NotFound from '../../../not-found';
 
+import React from 'react';
+
 
 export default async function BlogPage({ params }: { params: Promise<{ id: string }> }) {
   // `params.id` を非同期で処理

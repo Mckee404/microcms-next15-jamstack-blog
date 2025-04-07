@@ -1,4 +1,5 @@
 //components/Pagination.js
+import React from 'react';
 import Link from 'next/link';
 import { PER_PAGE } from '@/app/config';
 

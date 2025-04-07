@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
-import SearchBox from "./SearchBox"; // SearchBoxコンポーネントをインポート
+// import { Search } from "lucide-react";
+// import SearchBox from "./SearchBox"; // SearchBoxコンポーネントをインポート
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

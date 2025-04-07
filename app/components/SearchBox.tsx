@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function SearchBox() {
   const [query, setQuery] = useState("");

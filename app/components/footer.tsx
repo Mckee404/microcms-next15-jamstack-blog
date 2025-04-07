@@ -1,5 +1,6 @@
+import React from "react";
 import { Github, Twitter } from "lucide-react";
-import SearchBox from "./SearchBox";
+// import SearchBox from "./SearchBox";
 
 export default function Footer() {
   return (
