@@ -29,13 +29,6 @@ export type BlogCardProps = {
   updatedAt: string;
 }
 
-// ブログ記事の型定義
-type Thumbnail = {
-  url: string;
-  height: number;
-  width: number;
-};
-
 export async function getBlogPostsForCardsByPage(page: number): Promise<{ posts: BlogCardProps[]; totalCount: number }> {
   const data = await client.get({
     endpoint: 'blog', // 'blog'はmicroCMSのエンドポイント名
@@ -46,10 +39,10 @@ export async function getBlogPostsForCardsByPage(page: number): Promise<{ posts:
       orders: '-updatedAt', // 更新日の降順で取得
     },
   });
-  data.contents = data.contents.map((post: any) => ({
+  data.contents = data.contents.map((post: { thumbnail: { url: string }; tags: { tag: string }[]; category: { category: string }; updatedAt: string } & BlogCardProps) => ({
     ...post,
     imageUrl: post.thumbnail.url,
-    tags: post.tags.map((tag: any) => tag.tag),
+    tags: post.tags.map((tag: { tag: string }) => tag.tag),
     category: post.category.category,
     updatedAt: formatDate(post.updatedAt),
   })) as BlogCardProps[]; // contentsをBlogCardProps型に変換
@@ -66,7 +59,7 @@ export async function getBlogPostsForCardsById(id: string): Promise<  BlogCardPr
   const returnData = {
     ...data,
     imageUrl: data.thumbnail.url,
-    tags: data.tags.map((tag: any) => tag.tag),
+    tags: data.tags.map((tag: { tag: string }) => tag.tag),
     category: data.category.category,
     updatedAt: formatDate(data.updatedAt),
   } as BlogCardProps;
@@ -90,11 +83,11 @@ export async function getBlogPost(id: string): Promise<BlogPageProps> {
     endpoint: `blog/${id}`,
   });
   data.imageUrl = data.thumbnail.url; // サムネイルのURLを取得
-  data.tags = data.tags.map((tag: any) => tag.tag); // タグを取得
+  data.tags = data.tags.map((tag: { tag: string }) => tag.tag); // タグを取得
   data.category = data.category.category; // カテゴリを取得
   data.updatedAt = formatDate(data.updatedAt); // 更新日をフォーマット
   data.body = data.body.replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '<img src="$1" loading="lazy" />'); // 画像の読み込みを遅延させる
-  data.related = data.related.map((related: any) => related.id); // 関連記事のIDを取得
+  data.related = data.related.map((related: { id: string }) => related.id); // 関連記事のIDを取得
   return data as BlogPageProps;
 }
 
@@ -107,10 +100,10 @@ export async function searchBlogPostsByQuery(query: string): Promise<{ posts: Bl
       limit: 100,
     },
   });
-  data.contents = data.contents.map((post: any) => ({
+  data.contents = data.contents.map((post: { thumbnail: { url: string }; tags: { tag: string }[]; category: { category: string }; updatedAt: string } & BlogCardProps) => ({
     ...post,
     imageUrl: post.thumbnail.url,
-    tags: post.tags.map((tag: any) => tag.tag),
+    tags: post.tags.map((tag: { tag: string }) => tag.tag),
     category: post.category.category,
     updatedAt: formatDate(post.updatedAt),
   })) as BlogCardProps[];

@@ -1,16 +1,8 @@
 // app/page.tsx
-import { client, getBlogPostsForCardsByPage } from '../lib/microcms';
+import { getBlogPostsForCardsByPage } from '../lib/microcms';
 import { BlogCard } from './components/blog-card';
 import { Pagination } from './components/Pagination';
-import { PER_PAGE } from '@/app/config';
-import { formatDate } from './utils/dateFormatter';
-
-// ブログ記事の型定義
-type Thumbnail = {
-  url: string;
-  height: number;
-  width: number;
-};
+import React from 'react';
 
 export default async function Home() {
   const { posts, totalCount } = await getBlogPostsForCardsByPage(1);
