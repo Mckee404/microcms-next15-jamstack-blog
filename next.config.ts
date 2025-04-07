@@ -5,3 +5,15 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.microcms-assets.io",
+        pathname: "/assets/**",
+      },
+    ],
+  },
+}
