@@ -1,5 +1,9 @@
 import React from "react";
-import { getBlogPostsForCardsByCategoryId, getCategoryById } from "../../../lib/microcms";
+import {
+	getBlogPostsForCardsByCategoryId,
+	getCategoryById,
+	getCategoryList,
+} from "../../../lib/microcms";
 import { BlogCard } from "@/app/components/blog-card";
 
 export default async function CategoryPage({
@@ -10,7 +14,7 @@ export default async function CategoryPage({
 	const { id } = await params; // `params` から `id` を取得
 	const { category } = await getCategoryById(id);
 
-	if(!category) {
+	if (!category) {
 		return (
 			<main className="sm:container mx-auto">
 				<h2>{"一致するカテゴリーが存在しません。"}</h2>
@@ -18,9 +22,8 @@ export default async function CategoryPage({
 		);
 	}
 
-
 	const { posts } = await getBlogPostsForCardsByCategoryId(id);
-	
+
 	return (
 		<main className="sm:container mx-auto mt-8">
 			<h2 className="mx-8 text-2xl font-bold mb-2">{`「${category}」カテゴリー（ ${posts.length}件 ）`}</h2>
@@ -34,3 +37,14 @@ export default async function CategoryPage({
 		</main>
 	);
 }
+
+// 動的なページを作成
+export const generateStaticParams = async () => {
+	const categoryList = await getCategoryList();
+
+	const paths = categoryList.map((category) => ({
+		id: category.id, // タグのIDを使用
+	}));
+
+	return paths;
+};

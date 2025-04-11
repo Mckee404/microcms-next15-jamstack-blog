@@ -1,5 +1,5 @@
 import React from "react";
-import { getBlogPostsForCardsByTagId, getTagById } from "../../../lib/microcms";
+import { getBlogPostsForCardsByTagId, getTagById, getTagList } from "../../../lib/microcms";
 import { BlogCard } from "@/app/components/blog-card";
 
 export default async function CategoryPage({
@@ -34,3 +34,14 @@ export default async function CategoryPage({
     </main>
   );
 }
+
+// 動的なページを作成
+export const generateStaticParams = async () => {
+  const tagList = await getTagList();
+
+  const paths = tagList.map((tag) => ({
+    id: tag.id, // タグのIDを使用
+  }));
+
+  return paths;
+};
