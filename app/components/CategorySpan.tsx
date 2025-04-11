@@ -10,7 +10,7 @@ export default function CategorySpan(category: { title: string; id: string }) {
 	return (
 		<span
 			onClick={(e) => {
-				e.stopPropagation();
+				e.preventDefault();
 				router.push(`/category/${category.id}`);
 			}}
 			className="hover:underline"
