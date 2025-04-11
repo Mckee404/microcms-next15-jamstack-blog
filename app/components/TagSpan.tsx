@@ -18,7 +18,7 @@ export default function TagSpan({
 				<span
 					key={tag.id}
 					onClick={(e) => {
-						e.stopPropagation();
+						e.preventDefault();
 						router.push(`/tag/${tag.id}`);
 					}}
 					className="hover:underline"

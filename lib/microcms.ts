@@ -29,7 +29,7 @@ export type BlogCardProps = {
 	updatedAt: string;
 };
 
-export async function getBlogPostsForCardsByPage(
+export async function getBlogPostsForCardsByPagination(
 	page: number
 ): Promise<{ posts: BlogCardProps[]; totalCount: number }> {
 	const data = await client.get({
@@ -99,6 +99,84 @@ export type BlogPageProps = {
 	body: string;
 	related: string[];
 };
+
+export async function getBlogPostsForCardsByCategoryId(
+	categoryId: string,
+): Promise<{ posts: BlogCardProps[]; totalCount: number }> {
+	const data = await client.get({
+		endpoint: "blog", // 'blog'はmicroCMSのエンドポイント名
+		queries: {
+			fields: "id,title,thumbnail,updatedAt,tags,category,overview",
+			limit: 100, // 1ページあたりの表示件数
+			orders: "-updatedAt", // 更新日の降順で取得
+			filters: `category[equals]${categoryId}`, // カテゴリIDでフィルタリング
+		},
+	});
+	console.log(data);
+	data.contents = data.contents.map(
+		(
+			post: {
+				thumbnail: { url: string };
+				tags: { tag: string; id: string }[];
+				category: { category: string; id: string };
+				updatedAt: string;
+			} & BlogCardProps
+		) =>
+			({
+				...post,
+				imageUrl: post.thumbnail.url,
+				tags: post.tags.map((tag: { tag: string; id: string }) => ({
+					title: tag.tag,
+					id: tag.id,
+				})),
+				category: {
+					title: post.category.category,
+					id: post.category.id,
+				},
+				updatedAt: formatDate(post.updatedAt),
+			} as BlogCardProps)
+	) as BlogCardProps[]; // contentsをBlogCardProps型に変換
+	return { posts: data.contents, totalCount: data.totalCount }; // contentsを返す
+}
+
+export async function getBlogPostsForCardsByTagId(
+	tagId: string,
+): Promise<{ posts: BlogCardProps[]; totalCount: number }> {
+	const data = await client.get({
+		endpoint: "blog", // 'blog'はmicroCMSのエンドポイント名
+		queries: {
+			fields: "id,title,thumbnail,updatedAt,tags,category,overview",
+			limit: 100, // 1ページあたりの表示件数
+			orders: "-updatedAt", // 更新日の降順で取得
+			filters: `tags[contains]${tagId}`, // カテゴリIDでフィルタリング
+		},
+	});
+	console.log(data);
+	data.contents = data.contents.map(
+		(
+			post: {
+				thumbnail: { url: string };
+				tags: { tag: string; id: string }[];
+				category: { category: string; id: string };
+				updatedAt: string;
+			} & BlogCardProps
+		) =>
+			({
+				...post,
+				imageUrl: post.thumbnail.url,
+				tags: post.tags.map((tag: { tag: string; id: string }) => ({
+					title: tag.tag,
+					id: tag.id,
+				})),
+				category: {
+					title: post.category.category,
+					id: post.category.id,
+				},
+				updatedAt: formatDate(post.updatedAt),
+			} as BlogCardProps)
+	) as BlogCardProps[]; // contentsをBlogCardProps型に変換
+	return { posts: data.contents, totalCount: data.totalCount }; // contentsを返す
+}
 
 // microCMSから特定の記事を取得
 export async function getBlogPost(id: string): Promise<BlogPageProps> {
@@ -200,4 +278,18 @@ export async function getCategoryList(): Promise<
 		});
 	}
 	return returnData;
+}
+
+export async function getCategoryById(id : string): Promise<{ category: string; id: string }> {
+	const data = await client.get({
+		endpoint: `category/${id}`,
+	});
+	return { category: data.category, id: data.id };
+}
+
+export async function getTagById(id : string): Promise<{ tag: string; id: string }> {
+	const data = await client.get({
+		endpoint: `tags/${id}`,
+	});
+	return { tag: data.tag, id: data.id };
 }
