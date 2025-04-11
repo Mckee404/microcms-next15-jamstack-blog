@@ -13,7 +13,7 @@ export default function Header() {
       <div className="sm:container mx-auto flex justify-between items-center">
         {/* ロゴ */}
       <h1 className="text-2xl font-bold">
-        <Link href="/">My Blog</Link>
+        <Link href="/">Mckee Tech Blog</Link>
       </h1>
 
       {/* ナビゲーション */}

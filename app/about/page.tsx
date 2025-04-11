@@ -38,7 +38,7 @@ export default async function Home() {
         <h3 className="text-3xl font-bold mb-2">制作物</h3>
         <ul>
           <li>
-            <a href="">技術ブログ( microCMS + Next.js + CloudflarePages )</a>
+            <a href="/" target="_blank" rel="noopener noreferrer">技術ブログ( microCMS + Next.js + CloudflarePages )</a>
           </li>
         </ul>
       </div>

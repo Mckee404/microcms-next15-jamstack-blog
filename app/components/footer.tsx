@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="bg-neutral-100 border-t border-neutral-200 py-6 mt-8">
       <div className="container mx-auto flex flex-col items-center gap-4">
         {/* ブログタイトル */}
-        <h2 className="text-xl font-bold">My Blog</h2>
+        <h2 className="text-xl font-bold">Mckee Tech Blog</h2>
 
         {/* 検索ボックス */}
         {/* <SearchBox /> */}
