@@ -5,10 +5,10 @@ import { BlogCard } from "@/app/components/blog-card";
 export default async function CategoryPage({
   params,
 }: {
-  params: Promise<{ tagId: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { tagId } = await params; // `params` から `id` を取得
-  const { tag } = await getTagById(tagId);
+  const { id } = await params; // `params` から `id` を取得
+  const { tag } = await getTagById(id);
 
   if(!tag) {
     return (
@@ -19,7 +19,7 @@ export default async function CategoryPage({
   }
 
 
-  const { posts } = await getBlogPostsForCardsByTagId(tagId);
+  const { posts } = await getBlogPostsForCardsByTagId(id);
   
   return (
     <main className="sm:container mx-auto mt-8">
