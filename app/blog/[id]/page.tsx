@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
 	client,
 	getBlogPost,
@@ -11,6 +10,10 @@ import TagList from "@/app/components/TagList";
 import CategoryList from "@/app/components/CategoryList";
 import TagSpan from "@/app/components/TagSpan";
 import CategorySpan from "@/app/components/CategorySpan";
+import {
+	microCMSRichEditorHandler,
+	syntaxHighlightingByShikiTransformer,
+} from "microcms-rich-editor-handler";
 
 // 記事詳細ページの生成
 export default async function BlogPostPage({
@@ -25,52 +28,69 @@ export default async function BlogPostPage({
 			async (relatedId) => await getBlogPostsForCardsById(relatedId)
 		)
 	); // 関連記事を取得
+
+	const { html: transformedHtml } = await microCMSRichEditorHandler(
+		post.body,
+		{
+			transformers: [
+				syntaxHighlightingByShikiTransformer({
+					highlightOptions: {
+						javascript: {
+							lang: "javascript",
+							theme: "github-dark",
+						},
+					},
+					defaultHighlightOptions: {
+						lang: "text",
+						theme: "github-dark",
+					},
+				}),
+			],
+		}
+	);
+
 	return (
 		<div className="container mx-auto px-4 flex flex-col lg:flex-row lg:gap-4">
 			<main className="w-full lg:w-3/4">
-				<div className="relative aspect-[1.96/1] mb-4">
-					<Image
-						src={post.imageUrl}
-						alt={post.title}
-						priority
-						fill
-						className="object-cover rounded-lg"
-						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-					/>
-				</div>
-				<h1 className="text-3xl font-bold mb-2">{post.title}</h1>{" "}
+				<h1 className="text-4xl mb-6 mt-16">{post.title}</h1>{" "}
 				{/* タイトルを表示 */}
-				<div className="flex items-center justify-between mb-4">
+				<div className="mb-12">
 					<CategorySpan
 						title={post.category.title}
 						id={post.category.id}
 					/>
-					<span className="text-sm text-muted-foreground">
-						{post.updatedAt}
+					<span className="block text-sm text-muted-foreground">
+						最終更新日 : {post.updatedAt}
 					</span>
 				</div>
 				<div
-					className="prose max-w-none"
-					dangerouslySetInnerHTML={{ __html: post.body }}
+					className="prose max-w-none prose-h1:mt-12 prose-h1:mb-4 prose-h1:border-b-2 prose-h1:pb-2 prose-blue"
+					dangerouslySetInnerHTML={{ __html: transformedHtml }}
 				/>
 				<div className="mt-8">
 					<TagSpan tagList={post.tags} /> {/* タグを表示 */}
 				</div>
-				<h2 className="text-2xl font-bold mt-8 mb-4">関連記事</h2>
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-					{relatedPosts.map((relatedPost) => (
-						<BlogCard
-							key={relatedPost.id}
-							id={relatedPost.id}
-							title={relatedPost.title}
-							imageUrl={relatedPost.imageUrl}
-							tags={relatedPost.tags}
-							category={relatedPost.category}
-							updatedAt={relatedPost.updatedAt}
-							overview={relatedPost.overview}
-						/>
-					))}
-				</div>
+				{relatedPosts.length > 0 && (
+					<>
+						<h2 className="text-2xl font-bold mt-8 mb-4">
+							関連記事
+						</h2>
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+							{relatedPosts.map((relatedPost) => (
+								<BlogCard
+									key={relatedPost.id}
+									id={relatedPost.id}
+									title={relatedPost.title}
+									imageUrl={relatedPost.imageUrl}
+									tags={relatedPost.tags}
+									category={relatedPost.category}
+									updatedAt={relatedPost.updatedAt}
+									overview={relatedPost.overview}
+								/>
+							))}
+						</div>
+					</>
+				)}
 			</main>
 			<aside className="lg:w-1/4">
 				<div className="mt-8 lg:mt-2 px-4 gap-4 flex flex-col">

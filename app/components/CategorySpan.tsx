@@ -13,11 +13,10 @@ export default function CategorySpan(category: { title: string; id: string }) {
 				e.preventDefault();
 				router.push(`/category/${category.id}`);
 			}}
-			className="hover:underline"
 		>
-			<div className="flex items-center gap-2">
+			<div className="inline-flex items-center gap-2 cursor-pointer hover:underline">
 				<Folder className="h-4 w-4 text-muted-foreground" />
-				<span className="text-sm text-muted-foreground">
+				<span className="text-sm text-muted-foreground ">
 					{category.title}
 				</span>
 			</div>

@@ -34,7 +34,7 @@ export default function Footer() {
 
         {/* コピーライト */}
         <p className="text-sm text-neutral-500">
-          © {new Date().getFullYear()} My Blog. All rights reserved.
+          © {new Date().getFullYear()} Mckee Tech Blog. All rights reserved.
         </p>
       </div>
     </footer>
