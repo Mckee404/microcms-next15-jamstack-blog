@@ -11,6 +11,7 @@ import CategoryList from "@/app/components/CategoryList";
 import TagSpan from "@/app/components/TagSpan";
 import CategorySpan from "@/app/components/CategorySpan";
 import {
+	codeBlockFileNameTransformer,
 	microCMSRichEditorHandler,
 	syntaxHighlightingByShikiTransformer,
 } from "microcms-rich-editor-handler";
@@ -33,6 +34,7 @@ export default async function BlogPostPage({
 		post.body,
 		{
 			transformers: [
+				codeBlockFileNameTransformer(),
 				syntaxHighlightingByShikiTransformer({
 					highlightOptions: {
 						javascript: {
