@@ -61,3 +61,16 @@
     --chart-5: 340 75% 55%;
   }
 }
+
+.prose pre code {
+  @apply bg-transparent; /* 背景色の打ち消し用 */
+}
+
+.prose div[data-filename] {
+  @apply relative;
+  @apply mt-12;
+}
+
+.prose [data-filename] > span {
+  @apply absolute -top-5 left-0 rounded-t-sm border border-[#24292e] bg-[#24292e] px-2 pb-2 pt-1 font-mono text-xs text-white shadow-sm;
+}
