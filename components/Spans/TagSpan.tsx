@@ -4,10 +4,12 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Tag } from "lucide-react";
 
+import { TagModel } from "@/lib/api/microcms/models";
+
 export default function TagSpan({
 	tagList,
 }: {
-	tagList: { title: string; id: string }[];
+	tagList: TagModel[];
 }) {
 	const router = useRouter();
 	const MAX_TAGS = 4; // 表示するタグの最大数
@@ -27,7 +29,7 @@ export default function TagSpan({
 						className="flex items-center gap-1 text-neutral-600 bg-neutral-200 rounded-full text-xs px-2 py-1 hover:bg-neutral-300"
 					>
 						<Tag className="h-3 w-3" />
-						{tag.title}
+						{tag.tag}
 					</span>
 				</span>
 			))}

@@ -18,7 +18,7 @@ export default function Footer() {
             href="https://github.com/Mckee404"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neutral-600 hover:text-black"
+            className="text-neutral-600 hover:text-purple-500"
           >
             <Github className="h-6 w-6" />
           </a>
