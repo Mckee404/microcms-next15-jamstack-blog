@@ -7,20 +7,15 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
-import { BlogCardProps } from "@/lib/microcms";
-import CategorySpan from "./CategorySpan";
-import TagSpan from "./TagSpan";
+import CategorySpan from "@/components/Spans/CategorySpan";
+import TagSpan from "@/components/Spans/TagSpan";
+import { BlogModel } from "@/lib/api/microcms/models";
+import { formatDate } from "@/app/utils/dateFormatter";
 
-export function BlogCard({
-	title,
-	overview,
-	imageUrl,
-	tags,
-	category,
-	id,
-	updatedAt,
-}: BlogCardProps) {
-
+export default function BlogCard(blogModel: BlogModel) {
+	const { id, title, overview, category, tags } = blogModel;
+	const imageUrl = blogModel.thumbnail.url;
+	const updatedAt = formatDate(blogModel.updatedAt);
 	return (
 		<Link href={`/blog/${id}`}>
 			<Card className="overflow-hidden transition-all duration-200 hover:shadow-lg flex flex-col">
@@ -36,10 +31,7 @@ export function BlogCard({
 				<CardHeader className="flex-none">
 					<div className="space-y-1">
 						<div className="flex items-center justify-between">
-							<CategorySpan
-								title={category.title}
-								id={category.id}
-							/>
+							<CategorySpan category={category} />
 							<span className="text-sm text-muted-foreground">
 								{updatedAt}
 							</span>

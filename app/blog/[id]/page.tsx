@@ -1,20 +1,25 @@
-import {
-	client,
-	getBlogPost,
-	getBlogPostsForCardsById,
-} from "../../../lib/microcms";
-import { BlogCard } from "@/app/components/blog-card";
+import BlogCard from "@/components/BlogCard/BlogCard";
 
 import React from "react";
-import TagList from "@/app/components/TagList";
-import CategoryList from "@/app/components/CategoryList";
-import TagSpan from "@/app/components/TagSpan";
-import CategorySpan from "@/app/components/CategorySpan";
+import TagSpan from "@/components/Spans/TagSpan";
+import CategorySpan from "@/components/Spans/CategorySpan";
 import {
 	codeBlockFileNameTransformer,
 	microCMSRichEditorHandler,
 	syntaxHighlightingByShikiTransformer,
 } from "microcms-rich-editor-handler";
+import {
+	getAllBlogIds,
+	getBlogById,
+} from "@/lib/api/microcms/handler/get_blogs";
+import MainAndAside from "@/components/Aside/MainAndAside";
+
+import {
+	BLOG_CARD_FIELDS,
+	BLOG_META_FIELDS,
+	BLOG_PAGE_FIELDS,
+} from "@/lib/api/microcms/query";
+import { formatDate } from "@/app/utils/dateFormatter";
 
 // 記事詳細ページの生成
 export default async function BlogPostPage({
@@ -23,10 +28,11 @@ export default async function BlogPostPage({
 	params: Promise<{ id: string }>;
 }) {
 	const { id } = await params; // IDを取得
-	const post = await getBlogPost(id);
+	const post = await getBlogById({ id, fields: BLOG_PAGE_FIELDS });
 	const relatedPosts = await Promise.all(
 		post.related.map(
-			async (relatedId) => await getBlogPostsForCardsById(relatedId)
+			async (related) =>
+				await getBlogById({ id: related.id, fields: BLOG_CARD_FIELDS })
 		)
 	); // 関連記事を取得
 
@@ -41,6 +47,14 @@ export default async function BlogPostPage({
 							lang: "javascript",
 							theme: "github-dark",
 						},
+						go: {
+							lang: "go",
+							theme: "github-dark",
+						},
+						dockerfile: {
+							lang: "dockerfile",
+							theme: "github-dark",
+						},
 					},
 					defaultHighlightOptions: {
 						lang: "text",
@@ -52,17 +66,14 @@ export default async function BlogPostPage({
 	);
 
 	return (
-		<div className="container mx-auto px-4 flex flex-col lg:flex-row lg:gap-4">
-			<main className="w-full lg:w-3/4">
-				<h1 className="text-4xl mb-6 mt-16">{post.title}</h1>{" "}
+		<MainAndAside>
+			<>
+				<h1 className="text-4xl mb-6 mt-16">{post.title}</h1>
 				{/* タイトルを表示 */}
 				<div className="mb-12">
-					<CategorySpan
-						title={post.category.title}
-						id={post.category.id}
-					/>
+					<CategorySpan category={post.category} />
 					<span className="block text-sm text-muted-foreground">
-						最終更新日 : {post.updatedAt}
+						最終更新日 : {formatDate(post.updatedAt)}
 					</span>
 				</div>
 				<div
@@ -81,44 +92,23 @@ export default async function BlogPostPage({
 							{relatedPosts.map((relatedPost) => (
 								<BlogCard
 									key={relatedPost.id}
-									id={relatedPost.id}
-									title={relatedPost.title}
-									imageUrl={relatedPost.imageUrl}
-									tags={relatedPost.tags}
-									category={relatedPost.category}
-									updatedAt={relatedPost.updatedAt}
-									overview={relatedPost.overview}
+									{...relatedPost}
 								/>
 							))}
 						</div>
 					</>
 				)}
-			</main>
-			<aside className="lg:w-1/4">
-				<div className="mt-8 lg:mt-2 px-4 gap-4 flex flex-col">
-					<div>
-						<h3 className="text-xl font-bold mb-2">カテゴリー</h3>
-						<CategoryList />
-					</div>
-					<div>
-						<h3 className="text-xl font-bold mb-2">タグ</h3>
-						<TagList />
-					</div>
-				</div>
-			</aside>
-		</div>
+			</>
+		</MainAndAside>
 	);
 }
 
 // 静的パスを生成
 export async function generateStaticParams() {
-	const data = await client.get({
-		endpoint: "blog",
-		queries: { fields: "id" },
-	});
+	const blogIds = await getAllBlogIds();
 
-	return data.contents.map((content: { id: string }) => ({
-		id: content.id, // 各記事のIDをパラメータとして返す
+	return blogIds.map((id: string) => ({
+		id, // 各記事のIDをパラメータとして返す
 	}));
 }
 
@@ -128,7 +118,7 @@ export async function generateMetadata({
 	params: Promise<{ id: string }>;
 }) {
 	const { id } = await params;
-	const post = await getBlogPostsForCardsById(id);
+	const post = await getBlogById({ id, fields: BLOG_META_FIELDS });
 
 	return {
 		title: post.title,
@@ -138,12 +128,12 @@ export async function generateMetadata({
 			description: post.overview,
 			images: [
 				{
-					url: post.imageUrl,
+					url: post.thumbnail.url,
 					width: 1200,
 					height: 630,
 				},
 			],
-			url: `https://mckee-tech-blog.pages.dev//blog/${post.id}`,
+			url: `https://mckee-tech.com/blog/${post.id}`,
 			type: "website",
 		},
 	};
