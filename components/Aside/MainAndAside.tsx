@@ -12,7 +12,7 @@ export default function MainAndAside({
 		<div className="container mx-auto px-4 flex flex-col lg:flex-row lg:gap-4">
 			<main className="w-full lg:w-3/4">{children}</main>
 			<aside className="lg:w-1/4 mt-8 lg:mt-0">
-				<div className="mt-8 lg:mt-2 px-4 gap-4 flex flex-col">
+				<div className="mt-8 lg:mt-6 px-4 gap-8 flex flex-col">
 					<div>
 						<h3 className="text-xl font-bold mb-2">カテゴリー</h3>
 						<CategoryList />
