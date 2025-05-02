@@ -12,6 +12,7 @@ export const BLOG_PAGE_FIELDS = [
 	"title",
 	"body",
 	"tags",
+	"thumbnail",
 	"related",
 	"category",
   "updatedAt",
