@@ -55,6 +55,10 @@ export default async function BlogPostPage({
 							lang: "dockerfile",
 							theme: "github-dark",
 						},
+						cpp: {
+							lang: "cpp",
+							theme: "github-dark",
+						},
 					},
 					defaultHighlightOptions: {
 						lang: "text",
